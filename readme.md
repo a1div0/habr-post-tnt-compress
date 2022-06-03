@@ -25,7 +25,11 @@ space:format({
 Если это не новый проект, а существующий проект с данными, то нужно ещё вызвать фоновую
 миграцию:
 ```lua
-space:upgrade({ background = true })
+box.schema.func.create('noop', {is_deterministic = true, body = 'function(t) return t end'})
+space:upgrade{func = 'noop', format = {
+    {name = 'uid', type = 'string'},
+    {name = 'body', type = 'string', compression = 'zstd'},
+}}
 ```
 
 Подробнее [здесь](https://www.tarantool.io/en/enterprise_doc/tuple_compression/)
